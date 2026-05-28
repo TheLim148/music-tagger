@@ -1,5 +1,10 @@
+import argparse
+import mutagen
+
 def main():
-    print("Hello from music-tagger!")
+    parser = argparse.ArgumentParser(description='Some desc')
+    
+    print("Hello from music-tagger! with argparse and mutagen now")
 
 
 if __name__ == "__main__":
