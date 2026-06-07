@@ -87,4 +87,20 @@ def set_tags(
         updates: dict[str, str], 
         dry_run: bool
     ) -> None:
-    pass
+
+    audio = EasyID3(path)
+    current_tags = read_current_tags(path)
+
+    if not bool(updates):
+        print("There is no any tag to update")
+        return
+    
+    preview_changes(current_tags, updates)
+
+    if dry_run:
+        print("Dry run: file was not changed")
+    else:
+        for tag_name, new_value in updates.items():
+            audio[tag_name] = [new_value]
+
+        audio.save()
