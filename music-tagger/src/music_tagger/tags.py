@@ -42,8 +42,6 @@ def print_dump(path: Path) -> None:
         print("Can't define a type of audiofile")
         return
 
-    print("=== Raw ID3 dump ===")
-
     try:
         tags_id3 = ID3(path)
     except ID3NoHeaderError:
@@ -53,8 +51,33 @@ def print_dump(path: Path) -> None:
         print(f"File read error: {e}")
         return
 
+    print("=== Raw ID3 dump ===")
+
     for tag_name, value in tags_id3.items():
         if tag_name.startswith('APIC') or isinstance(value, APIC):
             print(f"{tag_name}: +")
         else:
             print(f"{tag_name}: {value}")
+
+def preview_changes(
+        current_tags: dict[str, str], 
+        updates: dict[str, str]
+    ):
+
+    for tag_name, new_value in updates.items():
+        if current_tags.get(tag_name):
+            old_value = current_tags.get(tag_name)
+        else:
+            old_value = "-"
+        
+        print(f"{tag_name}:\n  old: {old_value} -> new: {new_value}\n")
+
+def read_current_tags(path: Path):
+    pass
+
+def set_tags(
+        path: Path, 
+        updates: dict[str, str], 
+        dry_run: bool
+    ) -> None:
+    pass
