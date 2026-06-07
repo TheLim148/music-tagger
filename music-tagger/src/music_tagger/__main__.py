@@ -1,16 +1,5 @@
 from music_tagger.cli import create_parser, collect_tag_updates
-from music_tagger.tags import print_dump, print_info, preview_changes
-
-current_tags = {
-  "title": "Old title",
-  "artist": "Old artist",
-  "album": "Old album",
-  "genre": "Rock"
-}
-
-updates = {
-  "title": "New title"
-}
+from music_tagger.tags import print_dump, print_info, preview_changes, read_current_tags
 
 def main() -> None:
     parser = create_parser()
@@ -22,13 +11,10 @@ def main() -> None:
         print_dump(args.path_to_audio)
     elif args.command == 'set':
         updates = collect_tag_updates(args)
-        
+        current_tags = read_current_tags(args.path_to_audio)
         if updates is None:
             print("There is no any tag for change")
         else:
-            print("updates идёт дальше в tags.py")
-            
-
             preview_changes(current_tags, updates)
 
     elif args.command == 'scan':

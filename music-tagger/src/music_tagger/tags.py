@@ -62,7 +62,7 @@ def print_dump(path: Path) -> None:
 def preview_changes(
         current_tags: dict[str, str], 
         updates: dict[str, str]
-    ):
+    ) -> None:
 
     for tag_name, new_value in updates.items():
         if current_tags.get(tag_name):
@@ -73,7 +73,14 @@ def preview_changes(
         print(f"{tag_name}:\n  old: {old_value} -> new: {new_value}\n")
 
 def read_current_tags(path: Path):
-    pass
+    current_tags = {}
+    
+    audio = EasyID3(path)
+    
+    for tag_name, value in audio.items():
+        current_tags[f"{tag_name}"] = value
+        
+    return current_tags
 
 def set_tags(
         path: Path, 
