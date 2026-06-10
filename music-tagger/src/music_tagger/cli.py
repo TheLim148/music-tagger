@@ -42,7 +42,7 @@ def create_parser() -> argparse.ArgumentParser:
     parser_set.add_argument("--tracknumber", type=int)
     parser_set.add_argument("--genre", type=str)
     parser_set.add_argument("--dry-run", action="store_true")
-
+    parser_set.add_argument("--backup", action="store_true")
 
     return parser
 

@@ -1,5 +1,5 @@
 from music_tagger.cli import create_parser, collect_tag_updates
-from music_tagger.tags import print_dump, print_info, preview_changes, read_current_tags, set_tags
+from music_tagger.tags import print_dump, print_info, set_tags
 
 def main() -> None:
     parser = create_parser()

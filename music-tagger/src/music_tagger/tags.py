@@ -72,11 +72,9 @@ def preview_changes(
         
         print(f"{tag_name}:\n  old: {old_value} -> new: {new_value}\n")
 
-def read_current_tags(path: Path):
+def read_current_tags(audio: EasyID3):
     current_tags = {}
-    
-    audio = EasyID3(path)
-    
+     
     for tag_name, value in audio.items():
         current_tags[f"{tag_name}"] = value
         
@@ -89,7 +87,7 @@ def set_tags(
     ) -> None:
 
     audio = EasyID3(path)
-    current_tags = read_current_tags(path)
+    current_tags = read_current_tags(audio)
 
     if not bool(updates):
         print("There is no any tag to update")
