@@ -102,22 +102,39 @@ def set_tags(
         backup: bool,
     ) -> None:
 
-    audio = EasyID3(path)
-    current_tags = read_current_tags(audio)
-
     if not bool(updates):
         print("There is no any tag to update")
         return
+
+    try:
+        audio = EasyID3(path)
+        current_tags = read_current_tags(audio)
+        has_id3 = True
+    except ID3NoHeaderError:
+        current_tags = {}
+        has_id3 = False
     
     preview_changes(current_tags, updates)
 
     if dry_run:
+        if not has_id3:
+            print("ID3 tags would be created")
         print("Dry run: file was not changed")
-    elif backup:
+        return
+    
+    if backup:
         backup_path = make_backup(path)
         print(f"Backup created: {backup_path}")
-    else:
-        for tag_name, new_value in updates.items():
-            audio[tag_name] = [new_value]
+    
+    if not has_id3:
+        try:
+            audio = File(path, easy=True)
+        except Exception as e:
+            print(e)
 
-        audio.save()
+        audio.add_tags()
+
+    for tag_name, new_value in updates.items():
+        audio[tag_name] = [new_value]
+
+    audio.save()
