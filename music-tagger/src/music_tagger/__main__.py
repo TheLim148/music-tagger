@@ -1,6 +1,7 @@
 from music_tagger.cli import create_parser, collect_tag_updates
 from music_tagger.tags import print_dump, print_info, set_tags
 
+
 def main() -> None:
     parser = create_parser()
     args = parser.parse_args()
@@ -14,7 +15,7 @@ def main() -> None:
         if not bool(updates):
             print("There is no any tag for change")
         else:
-            set_tags(args.path_to_audio, updates, args.dry_run)            
+            set_tags(args.path_to_audio, updates, args.dry_run, args.backup)            
 
     elif args.command == 'scan':
         pass

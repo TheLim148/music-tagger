@@ -1,4 +1,6 @@
 from pathlib import Path
+from datetime import datetime
+import shutil
 
 from mutagen import File, MutagenError
 from mutagen.easyid3 import EasyID3
@@ -59,6 +61,19 @@ def print_dump(path: Path) -> None:
         else:
             print(f"{tag_name}: {value}")
 
+def make_backup(path: Path):
+    now = datetime.now()
+    timestamp = now.strftime("%d-%m-%Y_%H-%M-%S")
+    suffix = ".bak"
+    filename = path.name
+    new_filename = filename + "." + timestamp + suffix
+    new_path = Path(path.parent / new_filename)
+
+    shutil.copy2(path, new_path)
+
+    return new_path
+
+
 def preview_changes(
         current_tags: dict[str, str], 
         updates: dict[str, str]
@@ -83,7 +98,8 @@ def read_current_tags(audio: EasyID3):
 def set_tags(
         path: Path, 
         updates: dict[str, str], 
-        dry_run: bool
+        dry_run: bool,
+        backup: bool,
     ) -> None:
 
     audio = EasyID3(path)
@@ -97,6 +113,9 @@ def set_tags(
 
     if dry_run:
         print("Dry run: file was not changed")
+    elif backup:
+        backup_path = make_backup(path)
+        print(f"Backup created: {backup_path}")
     else:
         for tag_name, new_value in updates.items():
             audio[tag_name] = [new_value]
