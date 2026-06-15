@@ -33,7 +33,7 @@ def create_parser() -> argparse.ArgumentParser:
 
     parser_set = subparsers.add_parser(
         "set",
-        help="",
+        help="set tags in audiofiles, also can create a new tags if file does not have his own",
     )
     parser_set.add_argument("path_to_audio", type=Path)
     parser_set.add_argument("--title", type=str)

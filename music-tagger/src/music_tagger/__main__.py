@@ -8,8 +8,10 @@ def main() -> None:
 
     if args.command == 'info':
         print_info(args.path_to_audio)
+
     elif args.command == 'dump':
         print_dump(args.path_to_audio)
+
     elif args.command == 'set':
         updates = collect_tag_updates(args)
         if not bool(updates):
@@ -19,6 +21,7 @@ def main() -> None:
 
     elif args.command == 'scan':
         pass
+
     else:
         print("...")
 

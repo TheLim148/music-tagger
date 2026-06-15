@@ -69,7 +69,12 @@ def make_backup(path: Path):
     new_filename = filename + "." + timestamp + suffix
     new_path = Path(path.parent / new_filename)
 
-    shutil.copy2(path, new_path)
+    try:
+        shutil.copy2(path, new_path)
+    except PermissionError:
+        print("Permission denied: cannot create a backup")
+    except OSError as err:
+        print(f"Backup failed {err}")
 
     return new_path
 
@@ -106,6 +111,14 @@ def set_tags(
         print("There is no any tag to update")
         return
 
+    if not path.exists():
+        print(f"File not found: {path}")
+        return
+    
+    if not path.is_file():
+        print(f"Path is not file: {path}")
+        return
+
     try:
         audio = EasyID3(path)
         current_tags = read_current_tags(audio)
@@ -127,14 +140,19 @@ def set_tags(
         print(f"Backup created: {backup_path}")
     
     if not has_id3:
-        try:
-            audio = File(path, easy=True)
-        except Exception as e:
-            print(e)
+        audio = File(path, easy=True)
+        if audio is None:
+            print("Can't define type of audiofile")
+            return
 
         audio.add_tags()
 
     for tag_name, new_value in updates.items():
         audio[tag_name] = [new_value]
 
-    audio.save()
+    try:
+        audio.save()
+    except PermissionError:
+        print("Permission denied: cannot save file")
+    except OSError as err:
+        print(f"File system error while saving file: {err}")
