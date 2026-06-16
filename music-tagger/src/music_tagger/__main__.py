@@ -1,5 +1,6 @@
-from music_tagger.cli import create_parser, collect_tag_updates
-from music_tagger.tags import print_dump, print_info, set_tags
+from .cli import create_parser, collect_tag_updates
+from .tags import print_dump, print_info, set_tags
+from .scanner import scan_directory
 
 
 def main() -> None:
@@ -20,7 +21,7 @@ def main() -> None:
             set_tags(args.path_to_audio, updates, args.dry_run, args.backup)            
 
     elif args.command == 'scan':
-        pass
+        scan_directory(args.directory)
 
     else:
         print("...")

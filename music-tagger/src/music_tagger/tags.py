@@ -6,15 +6,7 @@ from mutagen import File, MutagenError
 from mutagen.easyid3 import EasyID3
 from mutagen.id3 import ID3, ID3NoHeaderError, APIC
 
-MAIN_TAGS = [
-    "title",
-    "artist",
-    "album",
-    "albumartist",
-    "tracknumber",
-    "date",
-    "genre",
-]
+from . import MAIN_TAGS
 
 def print_info(path: Path) -> None:
     try:
@@ -92,9 +84,14 @@ def preview_changes(
         
         print(f"{tag_name}:\n  old: {old_value} -> new: {new_value}\n")
 
-def read_current_tags(audio: EasyID3):
+def read_current_tags(path: Path):
     current_tags = {}
-     
+
+    try:
+        audio = EasyID3(path)
+    except ID3NoHeaderError:
+        print("There is no ID3 tags")
+
     for tag_name, value in audio.items():
         current_tags[f"{tag_name}"] = value
         
@@ -120,8 +117,7 @@ def set_tags(
         return
 
     try:
-        audio = EasyID3(path)
-        current_tags = read_current_tags(audio)
+        current_tags = read_current_tags(path)
         has_id3 = True
     except ID3NoHeaderError:
         current_tags = {}

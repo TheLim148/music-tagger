@@ -1,13 +1,7 @@
 import argparse
 from pathlib import Path
 
-SETTABLE_TAGS = [
-    "title",
-    "artist",
-    "album",
-    "tracknumber",
-    "genre",
-]
+from . import SETTABLE_TAGS
 
 def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -19,17 +13,20 @@ def create_parser() -> argparse.ArgumentParser:
         required=True,
     )
 
+
     parser_info = subparsers.add_parser(
         "info",
         help="shows main info about track",
     )
     parser_info.add_argument("path_to_audio", type=Path)
 
+
     parser_dump = subparsers.add_parser(
         "dump",
         help="shows all info about track",
     )
     parser_dump.add_argument("path_to_audio", type=Path)
+
 
     parser_set = subparsers.add_parser(
         "set",
@@ -43,6 +40,15 @@ def create_parser() -> argparse.ArgumentParser:
     parser_set.add_argument("--genre", type=str)
     parser_set.add_argument("--dry-run", action="store_true")
     parser_set.add_argument("--backup", action="store_true")
+
+
+    parser_scan = subparsers.add_parser(
+        "scan",
+        help="scans the whole directory and print info about tracks"
+    )
+    parser_scan.add_argument("directory", type=Path)
+    parser_scan.add_argument("--recursive", "-r", action="store_true")
+    parser_scan.add_argument("--only-problems", action="store_true")
 
     return parser
 
